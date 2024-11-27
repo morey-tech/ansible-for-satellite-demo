@@ -1,0 +1,30 @@
+---
+- name: Capture Satellite Facts
+  hosts: satellite
+
+  tasks:
+    - name: List all Satellite Organizations
+      redhat.satellite.resource_info:
+        username: "{{ satellite_username }}"
+        password: "{{ satellite_password }}"
+        server_url: "{{ satellite_server_url }}"
+        resource: organizations
+      register: sat_orgs
+
+    - name: Show all content_view
+      redhat.satellite.resource_info:
+        username: "{{ satellite_username }}"
+        password: "{{ satellite_password }}"
+        server_url: "{{ satellite_server_url }}"
+        resource: content_views
+      register: content_views
+
+    - name: Show Sat Orgs
+      ansible.builtin.debug:
+        var: item['name']
+      with_items: "{{ sat_orgs['resources'] }}"
+
+    - name: Show content views
+      ansible.builtin.debug:
+        var: item['name']
+      loop: "{{ content_views['resources'] }}"

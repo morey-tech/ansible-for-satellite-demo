@@ -1,0 +1,5 @@
+---
+satellite_server_url: https://satellite.pdxg4.sandbox773.opentlc.com
+satellite_username: admin
+satellite_password: changeme
+validate_certs: false

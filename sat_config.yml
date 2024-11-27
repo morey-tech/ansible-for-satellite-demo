@@ -1,0 +1,58 @@
+---
+- name: Capture Satellite Facts
+  hosts: satellite
+
+  collections:
+    - redhat.satellite
+
+  tasks:
+
+    - name: Configure Organizations in Satellite
+      ansible.builtin.import_role:
+        name: redhat.satellite.organizations
+      when: satellite_organizations is defined
+
+    # - name: Upload Manifest to Satellite
+    #   redhat.satellite.subscription_manifest:
+    #     username: "{{ satellite_username }}"
+    #     password: "{{ satellite_password }}"
+    #     server_url: "{{ satellite_server_url }}"
+    #     organization: "Default Organization"
+    #     state: present
+    #     manifest_path: "/tmp/manifest.zip"
+
+    - name: Enable RHEL Repositories
+      ansible.builtin.import_role:
+        name: redhat.satellite.repositories
+      vars:
+        satellite_organization: "Default Organization"
+      when: satellite_products is defined
+
+    - name: Configure Sync Plans for Products
+      ansible.builtin.import_role:
+        name: redhat.satellite.sync_plans
+      when: satellite_sync_plans is defined
+
+    - name: Configure Lifecycle Environments
+      ansible.builtin.import_role:
+        name: redhat.satellite.lifecycle_environments
+      when: satellite_lifecycle_environments is defined
+
+    - name: Configure Content Views
+      ansible.builtin.import_role:
+        name: redhat.satellite.content_views
+      when: satellite_content_views is defined
+
+    - name: Publish Content Views
+      redhat.satellite.content_view_version:
+        username: "{{ satellite_username }}"
+        password: "{{ satellite_password }}"
+        server_url: "{{ satellite_server_url }}"
+        content_view: "RHEL_BASE8"
+        organization: "Default Organization"
+        version: "1.0"
+        lifecycle_environments:
+          - "Library"
+          - "Dev"
+          - "Test"
+          - "Prod"

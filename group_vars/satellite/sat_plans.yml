@@ -1,0 +1,8 @@
+satellite_sync_plans:
+  - name: Weekly Sync
+    interval: weekly
+    sync_date: 2024-11-28 00:00:00 UTC
+    enabled: true
+    products:
+      - Red Hat Enterprise Linux Server
+      - Red Hat Enterprise Linux for x86_64

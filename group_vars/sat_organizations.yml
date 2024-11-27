@@ -1,0 +1,9 @@
+---
+satellite_organizations: 
+  - name: Default Organization
+    label: default
+    state: present
+    
+  - name: My Workshop
+    label: my_workshop
+    state: present
